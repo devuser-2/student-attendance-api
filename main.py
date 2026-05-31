@@ -147,3 +147,35 @@ def login(data: Login):
         }
 
     return {"message": "Invalid username or password"}
+
+
+@app.get("/ui/dashboard")
+def dashboard_page(request: Request):
+    return templates.TemplateResponse(
+        "dashboard.html",
+        {"request": request}
+    )
+
+@app.get("/dashboard")
+def dashboard(user: str = Depends(verify_token),
+              db: Session = Depends(get_db)):
+
+    total_students = db.query(Student).count()
+
+    today = date.today().isoformat()
+
+    present_today = db.query(Attendance).filter(
+        Attendance.attendance_date == today,
+        Attendance.status == "Present"
+    ).count()
+
+    absent_today = db.query(Attendance).filter(
+        Attendance.attendance_date == today,
+        Attendance.status == "Absent"
+    ).count()
+
+    return {
+        "total_students": total_students,
+        "present_today": present_today,
+        "absent_today": absent_today
+    }

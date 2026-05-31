@@ -1,19 +1,13 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Request
 from sqlalchemy.orm import Session
 from datetime import date
-
-from database import SessionLocal, engine
-from models import Base, Student, Attendance
-from schemas import StudentCreate, AttendanceCreate, Login
-
-from auth import authenticate_user, create_access_token
-from security import verify_token
-from fastapi.templating import Jinja2Templates
-from fastapi import Request
 import csv
+
+from pathlib import Path
+from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse
-templates = Jinja2Templates(directory="templates")
-Base.metadata.create_all(bind=engine)
+BASE_DIR = Path(__file__).resolve().parent
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 app = FastAPI()
 def get_db():

@@ -6,7 +6,8 @@ import os
 from database import SessionLocal, engine
 from models import Base, Student, Attendance
 from schemas import StudentCreate, AttendanceCreate, Login
-from security import verify_token
+from security import verify_token, SECRET_KEY, ALGORITHM
+from jose import jwt
 
 from pathlib import Path
 from fastapi.templating import Jinja2Templates

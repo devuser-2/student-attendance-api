@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Dashboard</h2>
+
+<div class="row mt-4">
+
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Total Students</h5>
+            <h2 id="total"></h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Present Today</h5>
+            <h2 id="present"></h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Absent Today</h5>
+            <h2 id="absent"></h2>
+        </div>
+    </div>
+
+</div>
+
+<script>
+async function loadDashboard() {
+    let token = localStorage.getItem("token");
+
+    let res = await fetch("/dashboard", {
+        headers: { "Authorization": "Bearer " + token }
+    });
+
+    let data = await res.json();
+
+    document.getElementById("total").innerText = data.total_students;
+    document.getElementById("present").innerText = data.present_today;
+    document.getElementById("absent").innerText = data.absent_today;
+}
+
+loadDashboard();
+</script>
+
+{% endblock %}

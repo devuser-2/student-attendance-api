@@ -122,3 +122,7 @@ def export_students(db: Session = Depends(get_db)):
             writer.writerow([s.id, s.name, s.class_name, s.mobile])
 
     return FileResponse(file, media_type="text/csv")
+
+@app.get("/login-test")
+def test(request: Request):
+    return {"status": "template system bypassed"}

@@ -123,10 +123,26 @@ def export_students(db: Session = Depends(get_db)):
 
     return FileResponse(file, media_type="text/csv")
 
-@app.get("/login-test")
-def test(request: Request):
-    return {"status": "template system bypassed"}
 
-    @app.get("/")
+
+@app.get("/")
 def home():
     return {"message": "Student Attendance API is running"}
+
+@app.post("/login")
+def login(data: Login):
+
+    if data.username == "admin" and data.password == "admin123":
+
+        token = jwt.encode(
+            {"sub": data.username},
+            SECRET_KEY,
+            algorithm=ALGORITHM
+        )
+
+        return {
+            "access_token": token,
+            "token_type": "bearer"
+        }
+
+    return {"message": "Invalid username or password"}

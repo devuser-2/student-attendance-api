@@ -3,6 +3,11 @@ from sqlalchemy.orm import Session
 from datetime import date
 import csv
 
+from database import SessionLocal, engine
+from models import Base, Student, Attendance
+from schemas import StudentCreate, AttendanceCreate, Login
+from security import verify_token
+
 from pathlib import Path
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse
@@ -10,6 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 app = FastAPI()
+Base.metadata.create_all(bind=engine)
 def get_db():
     db = SessionLocal()
     try:

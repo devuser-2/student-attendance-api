@@ -126,3 +126,7 @@ def export_students(db: Session = Depends(get_db)):
 @app.get("/login-test")
 def test(request: Request):
     return {"status": "template system bypassed"}
+
+    @app.get("/")
+def home():
+    return {"message": "Student Attendance API is running"}

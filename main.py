@@ -11,7 +11,8 @@ from security import verify_token
 from pathlib import Path
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse
-templates = Jinja2Templates(directory="templates")
+BASE_DIR = Path(__file__).resolve().parent
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
 def get_db():
@@ -100,7 +101,7 @@ def monthly_report(month: str, db: Session = Depends(get_db)):
     }
 @app.get("/ui/login")
 def login_page(request: Request):
-    return {"status": "login route reached"}
+    return templates.TemplateResponse("login.html", {"request": request})
 
 @app.get("/ui/attendance")
 def attendance_page(request: Request):

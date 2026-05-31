@@ -100,7 +100,7 @@ def monthly_report(month: str, db: Session = Depends(get_db)):
     }
 @app.get("/ui/login")
 def login_page(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+    return {"status": "login route reached"}
 
 @app.get("/ui/attendance")
 def attendance_page(request: Request):

@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, Request
 from sqlalchemy.orm import Session
-from datetime import date
+from datetime import date, datetime
 import csv
 import os
 from database import SessionLocal, engine
@@ -48,10 +48,7 @@ def mark_attendance(
 ):
     new_attendance = Attendance(
         student_id=attendance.student_id,
-        attendance_date=datetime.strptime(
-            attendance.attendance_date,
-            "%Y-%m-%d"
-        ).date(),
+        attendance_date=attendance.attendance_date,
         status=attendance.status
     )
 

@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from jose import jwt, JWTError
+from jose import jwt
 
 SECRET_KEY = "mysecretkey123"
 ALGORITHM = "HS256"
@@ -8,16 +8,18 @@ ALGORITHM = "HS256"
 security = HTTPBearer()
 
 def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    token = credentials.credentials
-
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username = payload.get("sub")
+        print("TOKEN RECEIVED:", credentials.credentials)
 
-        if username is None:
-            raise HTTPException(status_code=401, detail="Invalid token")
+        token = credentials.credentials
 
-        return username
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
 
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
+        return payload.get("sub")
+
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=str(e))

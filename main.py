@@ -41,7 +41,6 @@ def get_students(
     user: str = Depends(verify_token)
     ):
     return db.query(Student).all()
-
 @app.post("/attendance")
 def mark_attendance(
     attendance: AttendanceCreate,
@@ -49,7 +48,10 @@ def mark_attendance(
 ):
     new_attendance = Attendance(
         student_id=attendance.student_id,
-        attendance_date=str(attendance.attendance_date),
+        attendance_date=datetime.strptime(
+            attendance.attendance_date,
+            "%Y-%m-%d"
+        ).date(),
         status=attendance.status
     )
 
@@ -57,7 +59,12 @@ def mark_attendance(
     db.commit()
     db.refresh(new_attendance)
 
-    return new_attendance
+    return {
+        "id": new_attendance.id,
+        "student_id": new_attendance.student_id,
+        "attendance_date": str(new_attendance.attendance_date),
+        "status": new_attendance.status
+    }
 
 @app.get("/attendance")
 def get_attendance(db: Session = Depends(get_db)):

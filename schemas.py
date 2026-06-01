@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import date
 class StudentCreate(BaseModel):
     name: str
     class_name: str
@@ -6,7 +7,7 @@ class StudentCreate(BaseModel):
 
 class AttendanceCreate(BaseModel):
     student_id: int
-    attendance_date: str
+    attendance_date: date
     status: str
 class Login(BaseModel):
     username: str

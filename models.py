@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Date
 from database import Base
 
 class Student(Base):
@@ -14,5 +14,5 @@ class Attendance(Base):
 
     id = Column(Integer, primary_key=True)
     student_id = Column(Integer)
-    attendance_date = Column(String)
-    status = Column(String)  # Present / Absent
+    attendance_date = Column(Date)
+    status = Column(String)

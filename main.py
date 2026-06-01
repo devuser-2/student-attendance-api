@@ -22,7 +22,19 @@ def get_db():
         yield db
     finally:
         db.close()
-        
+@app.post("/students")
+def add_student(student: StudentCreate, db: Session = Depends(get_db)):
+    new_student = Student(
+        name=student.name,
+        class_name=student.class_name,
+        mobile=student.mobile
+    )
+
+    db.add(new_student)
+    db.commit()
+    db.refresh(new_student)
+
+    return new_student   
 @app.get("/students")
 def get_students(
     db: Session = Depends(get_db),
@@ -31,23 +43,21 @@ def get_students(
     return db.query(Student).all()
 
 @app.post("/attendance")
-def mark_attendance(attendance: AttendanceCreate, db: Session = Depends(get_db)):
+def mark_attendance(
+    attendance: AttendanceCreate,
+    db: Session = Depends(get_db)
+):
+    new_attendance = Attendance(
+        student_id=attendance.student_id,
+        attendance_date=str(attendance.attendance_date),
+        status=attendance.status
+    )
 
-    existing = db.query(Attendance).filter(
-        Attendance.student_id == attendance.student_id,
-        Attendance.attendance_date == attendance.attendance_date
-    ).first()
-
-    if existing:
-        return {"message": "Attendance already marked"}
-
-    new = Attendance(**attendance.dict())
-
-    db.add(new)
+    db.add(new_attendance)
     db.commit()
-    db.refresh(new)
+    db.refresh(new_attendance)
 
-    return new
+    return new_attendance
 
 @app.get("/attendance")
 def get_attendance(db: Session = Depends(get_db)):

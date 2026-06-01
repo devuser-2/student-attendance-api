@@ -31,6 +31,15 @@
 <script>
 async function addStudent() {
 
+    let name = document.getElementById("name").value.trim();
+    let class_name = document.getElementById("class_name").value.trim();
+    let mobile = document.getElementById("mobile").value.trim();
+
+    if (!name || !class_name || !mobile) {
+        alert("Please fill all fields");
+        return;
+    }
+
     let token = localStorage.getItem("token");
 
     await fetch("/students", {
@@ -40,9 +49,9 @@ async function addStudent() {
             "Authorization": "Bearer " + token
         },
         body: JSON.stringify({
-            name: document.getElementById("name").value,
-            class_name: document.getElementById("class_name").value,
-            mobile: document.getElementById("mobile").value
+            name,
+            class_name,
+            mobile
         })
     });
 

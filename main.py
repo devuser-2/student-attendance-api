@@ -24,6 +24,16 @@ def get_db():
         db.close()
 @app.post("/students")
 def add_student(student: StudentCreate, db: Session = Depends(get_db)):
+
+    if not student.name.strip():
+        return {"message": "Name is required"}
+
+    if not student.class_name.strip():
+        return {"message": "Class is required"}
+
+    if not student.mobile.strip():
+        return {"message": "Mobile is required"}
+
     new_student = Student(
         name=student.name,
         class_name=student.class_name,
@@ -169,7 +179,12 @@ def dashboard_page(request: Request):
         "dashboard.html",
         {"request": request}
     )
-
+@app.get("/ui/students")
+def students_page(request: Request):
+    return templates.TemplateResponse(
+        "students.html",
+        {"request": request}
+    )
 @app.get("/dashboard")
 def dashboard(user: str = Depends(verify_token),
               db: Session = Depends(get_db)):
